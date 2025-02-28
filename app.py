@@ -61,11 +61,24 @@ def predict():
         # Map the raw prediction to a human-readable risk category
         risk_category = risk_mapping.get(int(xgb_prediction), "Unknown")
 
-        # Build the response including a status code
+        # Generate a loan recommendation based on the risk category
+        if risk_category == "Low Risk":
+            loan_recommendation = (
+                "Approved: Customer has a low risk profile. Proceed with loan."
+            )
+        elif risk_category == "High Risk":
+            loan_recommendation = (
+                "Declined: Customer has a high risk profile. Loan is not recommended."
+            )
+        else:
+            loan_recommendation = "Review: Further analysis required."
+
+        # Build the response including a status code and recommendation
         response = {
             "status_code": 200,
             "Raw_Prediction": int(xgb_prediction),
             "Risk_Category": risk_category,
+            "Loan_Recommendation": loan_recommendation,
         }
         return jsonify(response), 200
 
